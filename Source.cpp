@@ -1,17 +1,21 @@
-#include <SDL.h>
 #include <iostream>
+#include "Constants.h"
+#include "Game.h"
 
 int main(int argc, char* argv[])
 {
-	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+	Game* game = new Game();
+
+	game->Initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
+
+	while (game->IsRunning())
 	{
-		std::cout << "SDL initialization failed. SDL Error: " << SDL_GetError();
-	}
-	else
-	{
-		std::cout << "SDL initialization succeeded!";
+		game->ProcessInput();
+		game->Update();
+		game->Render();
 	}
 
-	std::cin.get();
+	game->Destroy();
+
 	return 0;
 }
