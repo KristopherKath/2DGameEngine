@@ -81,7 +81,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>D:\GameEngine\libsdl\SDL2\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\GameEngine\libsdl\SDL2\lib\x64;$(LibraryPath)</LibraryPath>
+    <LibraryPath>D:\GameEngine\libglm\lib\glm;D:\GameEngine\libsdl\SDL2\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>

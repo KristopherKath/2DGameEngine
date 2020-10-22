@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Constants.h"
 #include "Game.h"
+#include "/GameEngine/libglm/lib/glm/glm.hpp"
 
 //Constructor
 Game::Game()
@@ -8,17 +9,17 @@ Game::Game()
 	this->bIsRunning = false;
 }
 
+//Deconstructor
+Game::~Game() {}
+
 //Checks if game is running
 //Returns boolean of bIsRunning
-bool Game::IsRunning() const
-{
-	return this->bIsRunning;
-}
+bool Game::IsRunning() const { return this->bIsRunning; }
 
-float ProjectilePosX = 0.0f;
-float ProjectilePosY = 0.0f;
-float ProjectileVelX = 20.0f;
-float ProjectileVelY = 30.0f;
+//Projectile position and velocity
+glm::vec2 ProjectilePos = glm::vec2(0.0f, 0.0f);
+glm::vec2 ProjectileVel = glm::vec2(20.0f, 20.0f);
+
 
 //Initializes SDL window and renderer 
 //Sets game as running if no errors
@@ -119,8 +120,10 @@ void Game::Update()
 	//Sets the new ticks for the current frame to be used in the next pass
 	TicksLastFrame = SDL_GetTicks(); //Update the ticks to this time
 
-	ProjectilePosX += ProjectileVelX * DeltaTime;
-	ProjectilePosY += ProjectileVelY * DeltaTime;
+	//Update game object with delta time
+	ProjectilePos = glm::vec2(
+		ProjectilePos.x + ProjectileVel.x * DeltaTime,
+		ProjectilePos.y + ProjectileVel.y * DeltaTime);
 }
 
 //Render Window
@@ -128,21 +131,26 @@ void Game::Update()
 //The buffer swaps with the actual screen to reduce artifacts
 void Game::Render()
 {
+	//Sets background color
 	SDL_SetRenderDrawColor(Renderer, 21, 21, 21, 255); //Draws the window as grey
-	SDL_RenderClear(Renderer); //Clears back buffer
+
+	//Clears back buffer
+	SDL_RenderClear(Renderer); 
 
 	//Projectile Struct
 	SDL_Rect Projectile
 	{
-		(int) ProjectilePosX,
-		(int) ProjectilePosY,
+		(int) ProjectilePos.x,
+		(int) ProjectilePos.y,
 		10, //width
-		20  //height
+		10  //height
 	};
 
+	//Draws game object of the scene
 	SDL_SetRenderDrawColor(Renderer, 255, 255, 255, 255); //Draws white for the projectile
 	SDL_RenderFillRect(Renderer, &Projectile); //Renders the Projectile
 
+	//Swap front and back buffers
 	SDL_RenderPresent(Renderer); //Swaps the rendered screen for visualization
 }
 
