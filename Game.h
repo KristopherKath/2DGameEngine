@@ -15,7 +15,6 @@ private:
 public:
 	Game();
 	~Game();
-
 	bool IsRunning() const; //getter for bIsRunning
 	void Initialize(int width, int height);
 	void ProcessInput();
@@ -23,6 +22,8 @@ public:
 	void Render();
 	void Destroy();
 
+public:
+	int TicksLastFrame;
 
 };
 

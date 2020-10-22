@@ -17,8 +17,8 @@ bool Game::IsRunning() const
 
 float ProjectilePosX = 0.0f;
 float ProjectilePosY = 0.0f;
-float ProjectileVelX = 0.06f;
-float ProjectileVelY = 0.06f;
+float ProjectileVelX = 20.0f;
+float ProjectileVelY = 30.0f;
 
 //Initializes SDL window and renderer 
 //Sets game as running if no errors
@@ -94,8 +94,21 @@ void Game::ProcessInput()
 //Update the game objects
 void Game::Update()
 {
-	ProjectilePosX += ProjectileVelX;
-	ProjectilePosY += ProjectileVelY;
+	//Wait until 16.6 ms has elapsed since the last frame
+	//In case computations happen before 16.6 ms we need to waste time till we get to 16.6 ms
+	while (!SDL_TICKS_PASSED(SDL_GetTicks(), TicksLastFrame + FRAME_TARGET_TIME));
+
+	//Delta time is the difference in ticks from last frame converted to seconds
+	float DeltaTime = (SDL_GetTicks() - TicksLastFrame) / 1000.0f;
+
+	//Clamp DeltaTime to a maximum value
+	DeltaTime = (DeltaTime > 0.05f) ? 0.05f : DeltaTime;
+
+	//Sets the new ticks for the current frame to be used in the next pass
+	TicksLastFrame = SDL_GetTicks(); //Update the ticks to this time
+
+	ProjectilePosX += ProjectileVelX * DeltaTime;
+	ProjectilePosY += ProjectileVelY * DeltaTime;
 }
 
 //Render Window
@@ -111,11 +124,11 @@ void Game::Render()
 	{
 		(int) ProjectilePosX,
 		(int) ProjectilePosY,
-		10,
-		10
+		10, //width
+		20  //height
 	};
 
-	SDL_SetRenderDrawColor(Renderer, 255, 255, 255, 255); //White screen rendered
+	SDL_SetRenderDrawColor(Renderer, 255, 255, 255, 255); //Draws white for the projectile
 	SDL_RenderFillRect(Renderer, &Projectile); //Renders the Projectile
 
 	SDL_RenderPresent(Renderer); //Swaps the rendered screen for visualization
