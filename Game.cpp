@@ -97,7 +97,18 @@ void Game::Update()
 	//Wait until 16.6 ms has elapsed since the last frame
 	//In case computations happen before 16.6 ms we need to waste time till we get to 16.6 ms
 	//***Not efficient since it forces 100% of CPU to focus on this while loop. Nothing else can work with the CPU while in this.***
-	while (!SDL_TICKS_PASSED(SDL_GetTicks(), TicksLastFrame + FRAME_TARGET_TIME));
+	//Took about 15% of CPU 
+	//while (!SDL_TICKS_PASSED(SDL_GetTicks(), TicksLastFrame + FRAME_TARGET_TIME));
+
+	//Wait until 16.6 ms has elapsed since the last frame
+	//In case computations happen before 16.6 ms we need to waste time till we get to 16.6 ms
+	//***Much more efficient than previous line. CPU can now do other processes in this time***
+	//Takes 0-0.1% of CPU
+	int TimeToWait = FRAME_TARGET_TIME - (SDL_GetTicks() - TicksLastFrame);
+	if (TimeToWait > 0 && TimeToWait <= FRAME_TARGET_TIME)
+	{
+		SDL_Delay(TimeToWait);
+	}
 
 	//Delta time is the difference in ticks from last frame converted to seconds
 	float DeltaTime = (SDL_GetTicks() - TicksLastFrame) / 1000.0f;
