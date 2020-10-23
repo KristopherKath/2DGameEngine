@@ -2,6 +2,7 @@
 #include "Constants.h"
 #include "Game.h"
 #include "/GameEngine/libglm/lib/glm/glm.hpp"
+#include "TransformComponent.h"
 
 EntityManager Manager;
 SDL_Renderer* Game::Renderer;
@@ -58,9 +59,19 @@ void Game::Initialize(int width, int height)
 		return;
 	}
 
+	//Load the level to run
+	LoadLevel(0);
+
 	//Game is now running
 	bIsRunning = true;
 	return;
+}
+
+//Loads info from level
+void Game::LoadLevel(int LevelNumber)
+{
+	Entity& NewEntity(Manager.AddEntity("Projectile"));
+	NewEntity.AddComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
 }
 
 //Processes User Input
@@ -119,8 +130,8 @@ void Game::Update()
 	//Sets the new ticks for the current frame to be used in the next pass
 	TicksLastFrame = SDL_GetTicks(); //Update the ticks to this time
 
-	//TODO:
-	//Here we call the manager.update to update all entities as a function of DeltaTime
+	//Updates all entities
+	Manager.Update(DeltaTime);
 }
 
 //Render Window
@@ -134,13 +145,20 @@ void Game::Render()
 	//Clears back buffer
 	SDL_RenderClear(Renderer); 
 
-	// TODO:
-	//Here we call the manager.render to render all entities
+	//Dont render if there is nothing to render
+	if (Manager.HasNoEntities())
+	{
+		return;
+	}
+
+	//Render all entities
+	Manager.Render();
 
 	//Swap front and back buffers
 	SDL_RenderPresent(Renderer); //Swaps the rendered screen for visualization
 }
 
+//Destroys window and renderer then quits
 void Game::Destroy()
 {
 	SDL_DestroyRenderer(Renderer);
