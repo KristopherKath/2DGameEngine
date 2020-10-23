@@ -3,6 +3,9 @@
 #include "Game.h"
 #include "/GameEngine/libglm/lib/glm/glm.hpp"
 
+EntityManager Manager;
+SDL_Renderer* Game::Renderer;
+
 //Constructor
 Game::Game()
 {
@@ -15,10 +18,6 @@ Game::~Game() {}
 //Checks if game is running
 //Returns boolean of bIsRunning
 bool Game::IsRunning() const { return this->bIsRunning; }
-
-//Projectile position and velocity
-glm::vec2 ProjectilePos = glm::vec2(0.0f, 0.0f);
-glm::vec2 ProjectileVel = glm::vec2(20.0f, 20.0f);
 
 
 //Initializes SDL window and renderer 
@@ -120,10 +119,8 @@ void Game::Update()
 	//Sets the new ticks for the current frame to be used in the next pass
 	TicksLastFrame = SDL_GetTicks(); //Update the ticks to this time
 
-	//Update game object with delta time
-	ProjectilePos = glm::vec2(
-		ProjectilePos.x + ProjectileVel.x * DeltaTime,
-		ProjectilePos.y + ProjectileVel.y * DeltaTime);
+	//TODO:
+	//Here we call the manager.update to update all entities as a function of DeltaTime
 }
 
 //Render Window
@@ -137,18 +134,8 @@ void Game::Render()
 	//Clears back buffer
 	SDL_RenderClear(Renderer); 
 
-	//Projectile Struct
-	SDL_Rect Projectile
-	{
-		(int) ProjectilePos.x,
-		(int) ProjectilePos.y,
-		10, //width
-		10  //height
-	};
-
-	//Draws game object of the scene
-	SDL_SetRenderDrawColor(Renderer, 255, 255, 255, 255); //Draws white for the projectile
-	SDL_RenderFillRect(Renderer, &Projectile); //Renders the Projectile
+	// TODO:
+	//Here we call the manager.render to render all entities
 
 	//Swap front and back buffers
 	SDL_RenderPresent(Renderer); //Swaps the rendered screen for visualization

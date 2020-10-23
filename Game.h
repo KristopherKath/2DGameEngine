@@ -4,13 +4,15 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include "Entity.h"
+#include "Component.h"
+#include "EntityManager.h"
 
 class Game
 {
 private:
 	bool bIsRunning;
 	SDL_Window* Window;
-	SDL_Renderer* Renderer;
 
 public:
 	Game();
@@ -21,10 +23,11 @@ public:
 	void Update();
 	void Render();
 	void Destroy();
+	void LoadLevel(int LevelNumber);
 
 public:
 	int TicksLastFrame;
-
+	static SDL_Renderer* Renderer;
 };
 
 
