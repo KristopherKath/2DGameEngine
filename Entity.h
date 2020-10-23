@@ -4,8 +4,8 @@
 #include <vector>
 #include <string>
 
-class EntityManager;
 class Component;
+class EntityManager;
 
 class Entity
 {
@@ -22,6 +22,16 @@ public:
 	void Render();
 	void Destroy();
 	bool IsActive() const;
+
+	template <typename T, typename... TArgs>
+	T& AddComponent(TArgs&&... args)
+	{
+		T* NewComponent(new T(std::forward<TArgs>(args)...));
+		NewComponent->Owner = this;
+		Components.emplace_back(NewComponent);
+		NewComponent->Initialize();
+		return *NewComponent;
+	}
 };
 #endif // !ENTITY_H
 

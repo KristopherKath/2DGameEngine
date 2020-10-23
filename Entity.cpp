@@ -2,6 +2,7 @@
 #include "EntityManager.h"
 #include "Component.h"
 
+
 //Constructors
 Entity::Entity(EntityManager& Manager) : Manager(Manager)
 {
