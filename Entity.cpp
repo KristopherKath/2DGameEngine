@@ -1,7 +1,7 @@
 #include "Entity.h"
 #include "EntityManager.h"
 #include "Component.h"
-
+#include <iostream>
 
 //Constructors
 Entity::Entity(EntityManager& Manager) : Manager(Manager)
@@ -42,4 +42,13 @@ void Entity::Destroy()
 bool Entity::IsActive() const
 {
 	return this->bIsActive;
+}
+
+//Lists all componentes
+void Entity::ListAllComponents() const
+{
+	for (auto& Component : Components)
+	{
+		std::cout << "Component<" << Component->ComponentName << ">\n";
+	}
 }

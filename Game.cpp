@@ -70,8 +70,20 @@ void Game::Initialize(int width, int height)
 //Loads info from level
 void Game::LoadLevel(int LevelNumber)
 {
-	Entity& NewEntity(Manager.AddEntity("Projectile"));
-	NewEntity.AddComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
+	Entity& NewEntity1(Manager.AddEntity("Projectile"));
+	NewEntity1.AddComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
+
+	Entity& NewEntity2(Manager.AddEntity("Car"));
+	NewEntity2.AddComponent<TransformComponent>(400, 300, 0, 20, 70, 32, 1);
+
+	Entity& NewEntity3(Manager.AddEntity("Ship"));
+	NewEntity3.AddComponent<TransformComponent>(600, 100, -15, 0, 32, 32, 1);
+
+	Entity& NewEntity4(Manager.AddEntity("Bus"));
+	NewEntity4.AddComponent<TransformComponent>(300, 600, 42, -25, 32, 32, 1);
+
+	Manager.ListAllEntities();
+
 }
 
 //Processes User Input

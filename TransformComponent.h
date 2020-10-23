@@ -18,6 +18,7 @@ public:
 	//Sets the Position, Velocity, Height, Width and Scale of object
 	TransformComponent(int PosX, int PosY, int VelX, int VelY, int W, int H, int S)
 	{
+		ComponentName = "TransformComponent";
 		Position = glm::vec2(PosX, PosY);
 		Velocity = glm::vec2(VelX, VelY);
 		Width = W;
