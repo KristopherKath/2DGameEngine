@@ -5,6 +5,8 @@
 #include <string>
 #include <map>
 #include <typeinfo>
+#include "./EntityManager.h"
+#include "./Component.h"
 
 class Component;
 class EntityManager;
@@ -12,12 +14,12 @@ class EntityManager;
 class Entity
 {
 private:
-	EntityManager& Manager;
-	bool bIsActive;
-	std::vector<Component*> Components;
-	std::map<const std::type_info*, Component*> ComponentTypeMap;
+	EntityManager& manager;
+	bool isActive;
+	std::vector<Component*> components;
+	std::map<const std::type_info*, Component*> componentTypeMap;
 public:
-	std::string Name;
+	std::string name;
 	Entity(EntityManager& Manager);
 	Entity(EntityManager& Manager, std::string name);
 	void Update(float DeltaTime);
@@ -31,9 +33,9 @@ public:
 	T& AddComponent(TArgs&&... args)
 	{
 		T* NewComponent(new T(std::forward<TArgs>(args)...));
-		NewComponent->Owner = this;
-		Components.emplace_back(NewComponent);
-		ComponentTypeMap[&typeid(*NewComponent)] = NewComponent;
+		NewComponent->owner = this;
+		components.emplace_back(NewComponent);
+		componentTypeMap[&typeid(*NewComponent)] = NewComponent;
 		NewComponent->Initialize();
 		return *NewComponent;
 	}
@@ -42,7 +44,14 @@ public:
 	template <typename T>
 	T* GetComponent()
 	{
-		return static_cast<T*>(ComponentTypeMap[&typeid(T)]);
+		return static_cast<T*>(componentTypeMap[&typeid(T)]);
+	}
+
+	//Will check if component is in componentTypeMap for given component
+	template <typename T>
+	bool HasComponent() const
+	{
+		return componentTypeMap.count(&typeid(T));
 	}
 };
 #endif // !ENTITY_H

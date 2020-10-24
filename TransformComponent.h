@@ -9,46 +9,33 @@
 class TransformComponent : public Component
 {
 public:
-	glm::vec2 Position;
-	glm::vec2 Velocity;
-	int Width;
-	int Height;
-	int Scale;
+	glm::vec2 position;
+	glm::vec2 velocity;
+	int width;
+	int height;
+	int scale;
 
 	//Sets the Position, Velocity, Height, Width and Scale of object
 	TransformComponent(int PosX, int PosY, int VelX, int VelY, int W, int H, int S)
 	{
-		ComponentName = "TransformComponent";
-		Position = glm::vec2(PosX, PosY);
-		Velocity = glm::vec2(VelX, VelY);
-		Width = W;
-		Height = H;
-		Scale = S;
+		componentName = "TransformComponent";
+		position = glm::vec2(PosX, PosY);
+		velocity = glm::vec2(VelX, VelY);
+		width = W;
+		height = H;
+		scale = S;
 	}
 
-	void Initialize() override
-	{
-
-	}
+	void Initialize() override {}
 
 	//Updates the transform position
 	void Update(float DeltaTime) override
 	{
-		Position.x += Velocity.x * DeltaTime;
-		Position.y += Velocity.y * DeltaTime;
+		position.x += velocity.x * DeltaTime;
+		position.y += velocity.y * DeltaTime;
 	}
 
-	void Render() override
-	{
-		SDL_Rect TransformRectangle = {
-			(int)Position.x,
-			(int)Position.y,
-			Width,
-			Height
-		};
-		SDL_SetRenderDrawColor(Game::Renderer, 255, 255, 255, 255);
-		SDL_RenderFillRect(Game::Renderer, &TransformRectangle);
-	}
+	void Render() override {}
 };
 
 #endif

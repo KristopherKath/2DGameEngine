@@ -4,22 +4,22 @@
 //Deletes all entities in the Entity Manager
 void EntityManager::ClearData()
 {
-	for (auto& Entity : Entities)
+	for (auto& Entity : entities)
 	{
 		Entity->Destroy();
 	}
 }
 
 //Returns true if there are no entities in Entity Manager
-bool EntityManager::HasNoEntities()
+bool EntityManager::HasNoEntities() const
 {
-	return Entities.size() == 0;
+	return entities.size() == 0;
 }
 
 //Updates each entity in Entity Manager
 void EntityManager::Update(float DeltaTime)
 {
-	for (auto& Entity : Entities)
+	for (auto& Entity : entities)
 	{
 		Entity->Update(DeltaTime);
 	}
@@ -28,7 +28,7 @@ void EntityManager::Update(float DeltaTime)
 //Renders each entity in Entity Manager
 void EntityManager::Render()
 {
-	for (auto& Entity : Entities)
+	for (auto& Entity : entities)
 	{
 		Entity->Render();
 	}
@@ -38,28 +38,30 @@ void EntityManager::Render()
 Entity& EntityManager::AddEntity(std::string EntityName)
 {
 	Entity* entity = new Entity(*this, EntityName);
-	Entities.emplace_back(entity);
+	entities.emplace_back(entity);
 	return *entity;
 }
 
 //Gets the Entity list
 std::vector<Entity*> EntityManager::GetEntities() const
 {
-	return Entities;
+	return entities;
 }
 
 //Returns how many entities there are 
-unsigned int EntityManager::GetEntityCount()
+unsigned int EntityManager::GetEntityCount() const
 {
-	return Entities.size();
+	return entities.size();
 }
 
 //Displays all Entities and their info
 void EntityManager::ListAllEntities() const
 {
-	for (auto& Entity : Entities)
+	unsigned int i = 0;
+	for (auto& Entity : entities)
 	{
-		std::cout << "Entity Name: " << Entity->Name << "\n    ";
+		std::cout << "Entity[" << i << "]:" << Entity->name << std::endl;
 		Entity->ListAllComponents();
+		i++;
 	}
 }

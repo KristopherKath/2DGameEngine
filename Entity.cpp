@@ -1,23 +1,21 @@
 #include "Entity.h"
-#include "EntityManager.h"
-#include "Component.h"
 #include <iostream>
 
 //Constructors
-Entity::Entity(EntityManager& Manager) : Manager(Manager)
+Entity::Entity(EntityManager& Manager) : manager(Manager)
 {
-	this->bIsActive = true;
+	this->isActive = true;
 }
 //Constructor given a name
-Entity::Entity(EntityManager& Manager, std::string Name) : Manager(Manager), Name(Name)
+Entity::Entity(EntityManager& Manager, std::string Name) : manager(Manager), name(Name)
 {
-	this->bIsActive = true;
+	this->isActive = true;
 }
 
 //Updates each component in this entity
 void Entity::Update(float DeltaTime)
 {
-	for (auto& Component : Components)
+	for (auto& Component : components)
 	{
 		Component->Update(DeltaTime);
 	}
@@ -26,7 +24,7 @@ void Entity::Update(float DeltaTime)
 //Renders each component in this entity
 void Entity::Render()
 {
-	for (auto& Component : Components)
+	for (auto& Component : components)
 	{
 		Component->Render();
 	}
@@ -35,20 +33,20 @@ void Entity::Render()
 //Destroy entity by setting it to not active
 void Entity::Destroy()
 {
-	this->bIsActive = false;
+	this->isActive = false;
 }
 
 //Returns whether this entity is active or not
 bool Entity::IsActive() const
 {
-	return this->bIsActive;
+	return this->isActive;
 }
 
 //Lists all componentes
 void Entity::ListAllComponents() const
 {
-	for (auto& Component : Components)
+	for (auto& mapElement : componentTypeMap)
 	{
-		std::cout << "Component<" << Component->ComponentName << ">\n";
+		std::cout << "   Component<" << mapElement.first->name() << ">" << std::endl;
 	}
 }

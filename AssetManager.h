@@ -6,11 +6,12 @@
 #include "TextureManager.h"
 #include "EntityManager.h"
 
+//Responsible for loading textures from Disk
 class AssetManager
 {
 private:
-	EntityManager* Manager;
-	std::map<std::string, SDL_Texture*> Textures;
+	EntityManager* manager;
+	std::map<std::string, SDL_Texture*> textures;
 
 public:
 	AssetManager(EntityManager* Manager);

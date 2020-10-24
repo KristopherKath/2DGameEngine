@@ -3,8 +3,7 @@
 
 #include "Game.h"
 
-class
-	TextureManager
+class TextureManager
 {
 public:
 	static SDL_Texture* LoadTexture(const char* FileName);

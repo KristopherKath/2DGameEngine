@@ -8,12 +8,12 @@ class Entity;
 class Component 
 {
 public:
-	Entity* Owner;
+	Entity* owner;
 	virtual ~Component() {}
 	virtual void Initialize() {}
 	virtual void Update(float DeltaTime) {}
 	virtual void Render() {}
-	std::string ComponentName;
+	std::string componentName;
 };
 #endif // !COMPONENT_H
 
