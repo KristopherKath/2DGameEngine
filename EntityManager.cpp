@@ -28,18 +28,36 @@ void EntityManager::Update(float DeltaTime)
 //Renders each entity in Entity Manager
 void EntityManager::Render()
 {
-	for (auto& Entity : entities)
+	//Renders entities in order of layer numbers defined in Constants.h
+	for (int layerNumber = 0; layerNumber < NUM_LAYERS; layerNumber++)
 	{
-		Entity->Render();
+		for (auto& entity : GetEntitiesByLayer(static_cast<LayerType>(layerNumber)))
+		{
+			entity->Render();
+		}
 	}
 }
 
 //Adds an entity to list of entities and returns the entity made
-Entity& EntityManager::AddEntity(std::string EntityName)
+Entity& EntityManager::AddEntity(std::string EntityName, LayerType layer)
 {
-	Entity* entity = new Entity(*this, EntityName);
+	Entity* entity = new Entity(*this, EntityName, layer);
 	entities.emplace_back(entity);
 	return *entity;
+}
+
+//Get entities by its given layer type
+std::vector<Entity*> EntityManager::GetEntitiesByLayer(LayerType layer) const
+{
+	std::vector<Entity*> selectedEntities;
+	for (auto& entity : entities)
+	{
+		if (entity->layer == layer)
+		{
+			selectedEntities.emplace_back(entity);
+		}
+	}
+	return selectedEntities;
 }
 
 //Gets the Entity list

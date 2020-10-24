@@ -8,6 +8,18 @@ const unsigned int WINDOW_HEIGHT = 600;
 const unsigned int FPS = 60;
 const unsigned int FRAME_TARGET_TIME = 1000 / FPS; //how long to render a frame in miliseconds (about 16.6 ms per frame)
 
+enum LayerType
+{
+	TILEMAP_LAYER = 0,
+	VEGETATION_LAYER = 1,
+	ENEMY_LAYER = 2,
+	PLAYER_LAYER = 3,
+	PROJECTILE_LAYER = 4,
+	UI_LAYER = 5
+};
+
+const unsigned int NUM_LAYERS = 6;
+
 #endif
 
 #pragma once

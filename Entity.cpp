@@ -7,7 +7,7 @@ Entity::Entity(EntityManager& Manager) : manager(Manager)
 	this->isActive = true;
 }
 //Constructor given a name
-Entity::Entity(EntityManager& Manager, std::string Name) : manager(Manager), name(Name)
+Entity::Entity(EntityManager& Manager, std::string Name, LayerType layer) : manager(Manager), name(Name), layer(layer)
 {
 	this->isActive = true;
 }
