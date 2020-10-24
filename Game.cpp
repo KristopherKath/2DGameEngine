@@ -4,12 +4,14 @@
 #include "AssetManager.h"
 #include "TransformComponent.h"
 #include "SpriteComponent.h"
+#include "KeyboardControlComponent.h"
 #include "/GameEngine/libglm/lib/glm/glm.hpp"
 
 
 EntityManager manager;
 AssetManager* Game::assetManager = new AssetManager(&manager);
 SDL_Renderer* Game::renderer;
+SDL_Event Game::event;
 
 //Constructor
 Game::Game()
@@ -33,13 +35,16 @@ void Game::LoadLevel(int LevelNumber)
 
 
 	/* Start including entities and also components to them */
+	Entity& chopperEntity(manager.AddEntity("chopper"));
+	chopperEntity.AddComponent<TransformComponent>(240, 106, 0, 0, 32, 32, 1);
+	chopperEntity.AddComponent<SpriteComponent>("chopper-image", 2, 90, true, false);
+	chopperEntity.AddComponent<KeyboardControlComponent>("up", "right", "down", "left", "space");
+
 	Entity& tankEntity(manager.AddEntity("tank"));
 	tankEntity.AddComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
 	tankEntity.AddComponent<SpriteComponent>("tank-image");
 
-	Entity& chopperEntity(manager.AddEntity("chopper"));
-	chopperEntity.AddComponent<TransformComponent>(240, 106, 0, 0, 32, 32, 1);
-	chopperEntity.AddComponent<SpriteComponent>("chopper-image", 2, 90, true, false);
+
 
 
 }
@@ -93,9 +98,8 @@ void Game::Initialize(int width, int height)
 //Processes User Input
 void Game::ProcessInput()
 {
-	SDL_Event Event;
-	SDL_PollEvent(&Event);
-	switch (Event.type)
+	SDL_PollEvent(&event);
+	switch (event.type)
 	{
 		//Closes the game when the window is closed
 		case SDL_QUIT:
@@ -106,7 +110,7 @@ void Game::ProcessInput()
 		//Closes the game when key ESC is pressed
 		case SDL_KEYDOWN: 
 		{
-			if (Event.key.keysym.sym == SDLK_ESCAPE)
+			if (event.key.keysym.sym == SDLK_ESCAPE)
 			{
 				isRunning = false;
 			}

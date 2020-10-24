@@ -1,5 +1,6 @@
 #ifndef SPRITECOMPONENT_H
 #define SPRITECOMPONENT_H
+#pragma once
 
 #include <SDL.h>
 #include "TextureManager.h"
@@ -50,9 +51,9 @@ public:
 			Animation upAnimaiton = Animation(3, numFrames, animationSpeed);
 
 			animations.emplace("DownAnimation", downAnimation);
-			animations.emplace("RightAnimaiton", rightAnimaiton);
+			animations.emplace("RightAnimation", rightAnimaiton);
 			animations.emplace("LeftAnimation", leftAnimation);
-			animations.emplace("UpAnimaiton", upAnimaiton);
+			animations.emplace("UpAnimation", upAnimaiton);
 
 			this->animationIndex = 0;
 			this->currentAnimationName = "DownAnimation";
@@ -101,7 +102,8 @@ public:
 		//animate the texture
 		if (isAnimated)
 		{
-			sourceRectangle.x = sourceRectangle.w * static_cast<int>((SDL_GetTicks() / animationSpeed) % numFrames); //changes the frame in the animation (column of spritesheet)
+			//changes the frame in the animation (column of spritesheet)
+			sourceRectangle.x = sourceRectangle.w * static_cast<int>((SDL_GetTicks() / animationSpeed) % numFrames); 
 		}
 		sourceRectangle.y = animationIndex * transform->height; //sets the row of the spritesheet
 

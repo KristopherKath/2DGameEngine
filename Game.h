@@ -1,5 +1,6 @@
 #ifndef GAME_H
 #define GAME_H
+#pragma once
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -31,6 +32,7 @@ public:
 	int ticksLastFrame = 0;
 	static SDL_Renderer* renderer;
 	static AssetManager* assetManager;
+	static SDL_Event event;
 };
 
 

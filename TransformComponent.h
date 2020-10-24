@@ -1,5 +1,6 @@
 #ifndef TRANSFORMCOMPONENT_H
 #define TRANFORMCOMPONENT_H
+#pragma once
 
 #include "EntityManager.h"
 #include "/GameEngine/libglm/lib/glm/glm.hpp"
