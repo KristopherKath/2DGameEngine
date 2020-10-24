@@ -56,26 +56,26 @@ public:
 			std::string keyCode = std::to_string(Game::event.key.keysym.sym);
 			if (keyCode.compare(upKey) == 0)
 			{
-				transform->velocity.y = -1;
+				transform->velocity.y = -100;
 				transform->velocity.x = 0;
 				sprite->Play("UpAnimation");
 			}
 			if (keyCode.compare(rightKey) == 0)
 			{
 				transform->velocity.y = 0;
-				transform->velocity.x = 1;
+				transform->velocity.x = 100;
 				sprite->Play("RightAnimation");
 			}
 			if (keyCode.compare(downKey) == 0)
 			{
-				transform->velocity.y = 1;
+				transform->velocity.y = 100;
 				transform->velocity.x = 0;
 				sprite->Play("DownAnimation");
 			}
 			if (keyCode.compare(leftKey) == 0)
 			{
 				transform->velocity.y = 0;
-				transform->velocity.x = -1;
+				transform->velocity.x = -100;
 				sprite->Play("LeftAnimation");
 			}
 		}

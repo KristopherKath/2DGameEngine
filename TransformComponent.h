@@ -6,6 +6,7 @@
 #include "/GameEngine/libglm/lib/glm/glm.hpp"
 #include <SDL.h>
 #include "Game.h"
+#include <algorithm>
 
 class TransformComponent : public Component
 {
@@ -32,8 +33,47 @@ public:
 	//Updates the transform position
 	void Update(float DeltaTime) override
 	{
+		//Change the objects position based on velocity
 		position.x += velocity.x * DeltaTime;
 		position.y += velocity.y * DeltaTime;
+
+		//Clamp the values if they are out of bounds of screen
+		if (!InBoundaryCheckX(position.x))
+		{
+			position.x = Clamp(position.x, 0, (int)WINDOW_WIDTH - 32);
+		}
+		if (!InBoundaryCheckY(position.y))
+		{
+			position.y = Clamp(position.y, 0, (int)WINDOW_HEIGHT - 32);
+		}
+	}
+
+	//Clamps the value to within the min and max value
+	//Useful if wanting to keep object within screen boundaries
+	int Clamp(int val, int min, int max)
+	{
+		if (val > max)
+			val = max;
+		if (val < min)
+			val = min;
+		return val;
+	}
+
+	//Checks to see if value is within boundaries of the screen
+	bool InBoundaryCheckX(int val) const
+	{
+		if (val > WINDOW_WIDTH || val < 0)
+			return false;
+
+		return true;
+	}
+	//Checks to see if value is within boundaries of the screen
+	bool InBoundaryCheckY(int val) const
+	{
+		if (val < 0 || val > WINDOW_HEIGHT)
+			return false;
+
+		return true;
 	}
 
 	void Render() override {}

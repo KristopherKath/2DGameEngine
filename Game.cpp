@@ -44,9 +44,6 @@ void Game::LoadLevel(int LevelNumber)
 	tankEntity.AddComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
 	tankEntity.AddComponent<SpriteComponent>("tank-image");
 
-
-
-
 }
 
 //Initializes SDL window and renderer 
