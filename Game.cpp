@@ -2,16 +2,18 @@
 #include "Constants.h"
 #include "Game.h"
 #include "AssetManager.h"
-#include "TransformComponent.h"
-#include "SpriteComponent.h"
-#include "KeyboardControlComponent.h"
+#include "Components/TransformComponent.h"
+#include "Components/SpriteComponent.h"
+#include "Components/KeyboardControlComponent.h"
 #include "/GameEngine/libglm/lib/glm/glm.hpp"
-
+#include "Map.h"
 
 EntityManager manager;
 AssetManager* Game::assetManager = new AssetManager(&manager);
 SDL_Renderer* Game::renderer;
 SDL_Event Game::event;
+Map* map;
+
 
 //Constructor
 Game::Game()
@@ -32,7 +34,10 @@ void Game::LoadLevel(int LevelNumber)
 	/* Start including new assets to the assetmanager list */
 	assetManager->AddTexture("tank-image", std::string("./assets/images/tank-big-right.png").c_str());
 	assetManager->AddTexture("chopper-image", std::string("./assets/images/chopper-spritesheet.png").c_str());
+	assetManager->AddTexture("jungle-tiletexture", std::string("./assets/tilemaps/jungle.png").c_str());
 
+	map = new Map("jungle-tiletexture", 2, 32);
+	map->LoadMap("./assets/tilemaps/jungle.map", 25, 20);
 
 	/* Start including entities and also components to them */
 	Entity& chopperEntity(manager.AddEntity("chopper"));

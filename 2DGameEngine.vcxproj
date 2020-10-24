@@ -149,6 +149,8 @@
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityManager.cpp" />
+    <ClCompile Include="Map.cpp" />
+    <ClCompile Include="Map.h" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="TextureManager.cpp" />
@@ -156,16 +158,16 @@
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="AssetManager.h" />
-    <ClInclude Include="ColliderComponent.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="Components\KeyboardControlComponent.h" />
+    <ClInclude Include="Components\SpriteComponent.h" />
+    <ClInclude Include="Components\TileComponent.h" />
+    <ClInclude Include="Components\TransformComponent.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="KeyboardControlComponent.h" />
-    <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="TextureManager.h" />
-    <ClInclude Include="TransformComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

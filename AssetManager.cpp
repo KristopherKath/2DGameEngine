@@ -11,7 +11,7 @@ void AssetManager::ClearData()
 	textures.clear();
 }
 
-//Adds a Texture into the map given the TextureID and its fila path
+//Adds a Texture into the map given the TextureID and its file path
 void AssetManager::AddTexture(std::string TextureID, const char* FilePath)
 {
 	textures.emplace(TextureID, TextureManager::LoadTexture(FilePath));
