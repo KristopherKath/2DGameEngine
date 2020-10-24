@@ -28,6 +28,7 @@ public:
 	void Destroy();
 	void LoadLevel(int LevelNumber);
 	void HandleCameraMovement();
+	void CheckCollisions();
 
 public:
 	int ticksLastFrame = 0;

@@ -45,28 +45,33 @@ public:
 		//for multiple animations on spritesheet (4 rows of animations currently
 		if (hasDirections)
 		{
+			//Create animations based on index (row), number of frames to run, and animation speed
 			Animation downAnimation = Animation(0, numFrames, animationSpeed);
 			Animation rightAnimaiton = Animation(1, numFrames, animationSpeed);
 			Animation leftAnimation = Animation(2, numFrames, animationSpeed);
 			Animation upAnimaiton = Animation(3, numFrames, animationSpeed);
 
+			//Add animaions into animations map
 			animations.emplace("DownAnimation", downAnimation);
 			animations.emplace("RightAnimation", rightAnimaiton);
 			animations.emplace("LeftAnimation", leftAnimation);
 			animations.emplace("UpAnimation", upAnimaiton);
 
+			//Set animation index and name to first animation to run
 			this->animationIndex = 0;
 			this->currentAnimationName = "DownAnimation";
 		}
 		//For one animation
 		else
 		{
+			//Add single animation to run and set up for play
 			Animation singleAnimation = Animation(0, numFrames, animationSpeed);
 			animations.emplace("SingleAnimation", singleAnimation);
 			this->animationIndex = 0;
 			this->currentAnimationName = "SingleAnimation";
 		}
 
+		//Play the animation and set its texture
 		Play(this->currentAnimationName);
 		SetTexture(AssetTextureID);
 	}
@@ -80,7 +85,7 @@ public:
 		currentAnimationName = animationName;
 	}
 
-	//sets the texture for the given textureID
+	//Sets the sprite texture for the given textureID
 	void SetTexture(std::string AssetTextureID)
 	{
 		texture = Game::assetManager->GetTexture(AssetTextureID);

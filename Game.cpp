@@ -4,6 +4,7 @@
 #include "AssetManager.h"
 #include "Components/TransformComponent.h"
 #include "Components/SpriteComponent.h"
+#include "Components/ColliderComponent.h"
 #include "Components/KeyboardControlComponent.h"
 #include "/GameEngine/libglm/lib/glm/glm.hpp"
 #include "Map.h"
@@ -30,30 +31,37 @@ Game::~Game() {}
 bool Game::IsRunning() const { return this->isRunning; }
 
 
-//player entity
+//player entity - entity components added in LoadLevel 
 Entity& player(manager.AddEntity("chopper", PLAYER_LAYER));
 
 //Loads info from level
 void Game::LoadLevel(int LevelNumber)
 {
 	/* Start including new assets to the assetmanager list */
+	//Add assets to assetmanager
 	assetManager->AddTexture("tank-image", std::string("./assets/images/tank-big-right.png").c_str());
 	assetManager->AddTexture("chopper-image", std::string("./assets/images/chopper-spritesheet.png").c_str());
 	assetManager->AddTexture("radar-image", std::string("./assets/images/radar.png").c_str());
 	assetManager->AddTexture("jungle-tiletexture", std::string("./assets/tilemaps/jungle.png").c_str());
 
+	//Add tilemap
 	map = new Map("jungle-tiletexture", 2, 32);
 	map->LoadMap("./assets/tilemaps/jungle.map", 25, 20);
 
 	/* Start including entities and also components to them */
+	//Add player components
 	player.AddComponent<TransformComponent>(240, 106, 0, 0, 32, 32, 1);
 	player.AddComponent<SpriteComponent>("chopper-image", 2, 90, true, false);
 	player.AddComponent<KeyboardControlComponent>("up", "right", "down", "left", "space");
+	player.AddComponent<ColliderComponent>("player", 240, 106, 32, 32);
 
+	//Add enemy and their components
 	Entity& tankEntity(manager.AddEntity("tank", ENEMY_LAYER));
-	tankEntity.AddComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
+	tankEntity.AddComponent<TransformComponent>(150, 495, 5, 0, 32, 32, 1);
 	tankEntity.AddComponent<SpriteComponent>("tank-image");
+	tankEntity.AddComponent<ColliderComponent>("enemy", 150, 495, 32, 32);
 
+	//Add radar UI and their components
 	Entity& radarEntity(manager.AddEntity("Radar", UI_LAYER));
 	radarEntity.AddComponent<TransformComponent>(720, 15, 0, 0, 64, 64, 1);
 	radarEntity.AddComponent<SpriteComponent>("radar-image", 8, 150, false, true);
@@ -163,8 +171,12 @@ void Game::Update()
 
 	//Updates all entities
 	manager.Update(DeltaTime);
-
+	
+	//Update the camera movement
 	HandleCameraMovement();
+	
+	//Check if there are any collisions with player in game
+	CheckCollisions();
 }
 
 //Render Window
@@ -200,11 +212,22 @@ void Game::HandleCameraMovement()
 	camera.x = mainPlayerTransform->position.x - (WINDOW_WIDTH / 2);
 	camera.y = mainPlayerTransform->position.y - (WINDOW_HEIGHT / 2);
 
-	//clamp the values of the camera if leaving boundaries
+	//clamp the values of the camera if leaving boundaries of map
 	camera.x = camera.x < 0 ? 0 : camera.x;
 	camera.y = camera.y < 0 ? 0 : camera.y;
 	camera.x = camera.x > camera.w ? camera.w : camera.x;
 	camera.y = camera.y > camera.h ? camera.h : camera.y;
+}
+
+//Checks entities, that have collider componenet, if they are colliding
+void Game::CheckCollisions()
+{
+	std::string collisionTagType = manager.CheckEntityCollisions(player);
+	if (collisionTagType.compare("enemy") == 0)
+	{
+		//TODO: do something when collision is identified with an enemy
+		isRunning = false;
+	}
 }
 
 //Destroys window and renderer then quits

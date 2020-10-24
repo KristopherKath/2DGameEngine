@@ -21,6 +21,7 @@ public:
 
 	KeyboardControlComponent() {}
 
+	//Constructor: set key codes 
 	KeyboardControlComponent(std::string upKey, std::string rightKey, std::string downKey, std::string leftKey, std::string shootKey)
 	{
 		this->upKey = GetSDLKeyStringCode(upKey);
@@ -41,6 +42,7 @@ public:
 		return std::to_string(static_cast<int>(key[0]));
 	}
 
+	//Initialize the keyboard component by setting sprite and transform
 	void Initialize() override
 	{
 		transform = owner->GetComponent<TransformComponent>();
@@ -50,7 +52,7 @@ public:
 	//Updates based on keyboard input
 	void Update(float deltaTime) override
 	{
-		//When key pressed
+		//When key pressed update the speed/direction of entity and animation
 		if (Game::event.type == SDL_KEYDOWN)
 		{
 			std::string keyCode = std::to_string(Game::event.key.keysym.sym);
@@ -80,7 +82,7 @@ public:
 			}
 		}
 
-		//When key released
+		//When key released update the speed/direction of entity
 		if (Game::event.type == SDL_KEYUP)
 		{
 			std::string keyCode = std::to_string(Game::event.key.keysym.sym);

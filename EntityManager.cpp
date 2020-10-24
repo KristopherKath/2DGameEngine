@@ -1,5 +1,7 @@
 #include "EntityManager.h"
 #include <iostream>
+#include "Collision.h"
+#include "Components\ColliderComponent.h"
 
 //Deletes all entities in the Entity Manager
 void EntityManager::ClearData()
@@ -25,10 +27,9 @@ void EntityManager::Update(float DeltaTime)
 	}
 }
 
-//Renders each entity in Entity Manager
+//Renders each entity in Entity Manager in order of layer numbers defined in Constants.h
 void EntityManager::Render()
 {
-	//Renders entities in order of layer numbers defined in Constants.h
 	for (int layerNumber = 0; layerNumber < NUM_LAYERS; layerNumber++)
 	{
 		for (auto& entity : GetEntitiesByLayer(static_cast<LayerType>(layerNumber)))
@@ -52,8 +53,10 @@ std::vector<Entity*> EntityManager::GetEntitiesByLayer(LayerType layer) const
 	std::vector<Entity*> selectedEntities;
 	for (auto& entity : entities)
 	{
+		//if the entity layer is the same as given layer
 		if (entity->layer == layer)
 		{
+			//add entity to list to return
 			selectedEntities.emplace_back(entity);
 		}
 	}
@@ -70,6 +73,34 @@ std::vector<Entity*> EntityManager::GetEntities() const
 unsigned int EntityManager::GetEntityCount() const
 {
 	return entities.size();
+}
+
+//Looks through all entities to check collision with given entity
+std::string EntityManager::CheckEntityCollisions(Entity& myEntity) const
+{
+	//Get the collider of given entity
+	ColliderComponent* myCollider = myEntity.GetComponent<ColliderComponent>();
+
+	//loop through all entities
+	for (auto& entity : entities)
+	{
+		//if the entity is not the same as given entity and not a tile
+		if (entity->name.compare(myEntity.name) != 0 && entity->name.compare("Tile") != 0)
+		{
+			//If the entity has a collider componenet
+			if (entity->HasComponent<ColliderComponent>())
+			{
+				//Check if the colliders collide with each other
+				ColliderComponent* otherCollider = entity->GetComponent<ColliderComponent>();
+				if (Collision::CheckRectangleCollision(myCollider->collider, otherCollider->collider))
+				{
+					//return the tag of colliding entity
+					return otherCollider->colliderTag;
+				}
+			}
+		}
+	}
+	return std::string();;
 }
 
 //Displays all Entities and their info
