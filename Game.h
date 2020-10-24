@@ -27,9 +27,11 @@ public:
 	void Render();
 	void Destroy();
 	void LoadLevel(int LevelNumber);
+	void HandleCameraMovement();
 
 public:
 	int ticksLastFrame = 0;
+	static SDL_Rect camera;
 	static SDL_Renderer* renderer;
 	static AssetManager* assetManager;
 	static SDL_Event event;

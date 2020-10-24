@@ -12,6 +12,7 @@ EntityManager manager;
 AssetManager* Game::assetManager = new AssetManager(&manager);
 SDL_Renderer* Game::renderer;
 SDL_Event Game::event;
+SDL_Rect Game::camera = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
 Map* map;
 
 
@@ -28,23 +29,26 @@ Game::~Game() {}
 //Returns boolean of bIsRunning
 bool Game::IsRunning() const { return this->isRunning; }
 
+
+//player entity
+Entity& player(manager.AddEntity("chopper", PLAYER_LAYER));
+
 //Loads info from level
 void Game::LoadLevel(int LevelNumber)
 {
 	/* Start including new assets to the assetmanager list */
 	assetManager->AddTexture("tank-image", std::string("./assets/images/tank-big-right.png").c_str());
 	assetManager->AddTexture("chopper-image", std::string("./assets/images/chopper-spritesheet.png").c_str());
-	assetManager->AddTexture("rader-image", std::string("./assets/images/radar.png").c_str());
+	assetManager->AddTexture("radar-image", std::string("./assets/images/radar.png").c_str());
 	assetManager->AddTexture("jungle-tiletexture", std::string("./assets/tilemaps/jungle.png").c_str());
 
 	map = new Map("jungle-tiletexture", 2, 32);
 	map->LoadMap("./assets/tilemaps/jungle.map", 25, 20);
 
 	/* Start including entities and also components to them */
-	Entity& chopperEntity(manager.AddEntity("chopper", PLAYER_LAYER));
-	chopperEntity.AddComponent<TransformComponent>(240, 106, 0, 0, 32, 32, 1);
-	chopperEntity.AddComponent<SpriteComponent>("chopper-image", 2, 90, true, false);
-	chopperEntity.AddComponent<KeyboardControlComponent>("up", "right", "down", "left", "space");
+	player.AddComponent<TransformComponent>(240, 106, 0, 0, 32, 32, 1);
+	player.AddComponent<SpriteComponent>("chopper-image", 2, 90, true, false);
+	player.AddComponent<KeyboardControlComponent>("up", "right", "down", "left", "space");
 
 	Entity& tankEntity(manager.AddEntity("tank", ENEMY_LAYER));
 	tankEntity.AddComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
@@ -159,6 +163,8 @@ void Game::Update()
 
 	//Updates all entities
 	manager.Update(DeltaTime);
+
+	HandleCameraMovement();
 }
 
 //Render Window
@@ -183,6 +189,22 @@ void Game::Render()
 
 	//Swap front and back buffers
 	SDL_RenderPresent(renderer); //Swaps the rendered screen for visualization
+}
+
+//Updates the camera movement on the player
+void Game::HandleCameraMovement()
+{
+	TransformComponent* mainPlayerTransform = player.GetComponent<TransformComponent>();
+
+	//only updates camera when player has reached half of the screen size
+	camera.x = mainPlayerTransform->position.x - (WINDOW_WIDTH / 2);
+	camera.y = mainPlayerTransform->position.y - (WINDOW_HEIGHT / 2);
+
+	//clamp the values of the camera if leaving boundaries
+	camera.x = camera.x < 0 ? 0 : camera.x;
+	camera.y = camera.y < 0 ? 0 : camera.y;
+	camera.x = camera.x > camera.w ? camera.w : camera.x;
+	camera.y = camera.y > camera.h ? camera.h : camera.y;
 }
 
 //Destroys window and renderer then quits

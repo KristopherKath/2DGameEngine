@@ -40,7 +40,8 @@ public:
 
 	void Update(float deltaTime) override
 	{
-		//TODO: here we will take care of tile positions based on camera control that will keep moving
+		destinationRectangle.x = position.x - Game::camera.x;
+		destinationRectangle.y = position.y - Game::camera.y;
 	}
 
 	void Render() override

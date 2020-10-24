@@ -37,6 +37,7 @@ public:
 		position.x += velocity.x * DeltaTime;
 		position.y += velocity.y * DeltaTime;
 
+		/*
 		//Clamp the values if they are out of bounds of screen
 		if (!InBoundaryCheckX(position.x))
 		{
@@ -46,6 +47,7 @@ public:
 		{
 			position.y = Clamp(position.y, 0, (int)WINDOW_HEIGHT - 32);
 		}
+		*/
 	}
 
 	//Clamps the value to within the min and max value
