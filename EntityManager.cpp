@@ -75,32 +75,66 @@ unsigned int EntityManager::GetEntityCount() const
 	return entities.size();
 }
 
-//Looks through all entities to check collision with given entity
-std::string EntityManager::CheckEntityCollisions(Entity& myEntity) const
+//Returns the type of collision of two colliding entities
+CollisionType EntityManager::CheckCollisions() const
 {
-	//Get the collider of given entity
-	ColliderComponent* myCollider = myEntity.GetComponent<ColliderComponent>();
-
-	//loop through all entities
-	for (auto& entity : entities)
+	//Check each entity
+	for (int i = 0; i < entities.size() - 1; i++) 
 	{
-		//if the entity is not the same as given entity and not a tile
-		if (entity->name.compare(myEntity.name) != 0 && entity->name.compare("Tile") != 0)
+		auto& thisEntity = entities[i];
+
+		//If this entity has a collider component
+		if (thisEntity->HasComponent<ColliderComponent>())
 		{
-			//If the entity has a collider componenet
-			if (entity->HasComponent<ColliderComponent>())
+
+			//Get the this entities collider component
+			ColliderComponent* thisCollider = thisEntity->GetComponent<ColliderComponent>();
+
+			//Check each entity after the selected entity
+			for (int j = i + 1; j < entities.size(); j++) 
 			{
-				//Check if the colliders collide with each other
-				ColliderComponent* otherCollider = entity->GetComponent<ColliderComponent>();
-				if (Collision::CheckRectangleCollision(myCollider->collider, otherCollider->collider))
+				auto& thatEntity = entities[j];
+
+				//If the entity names are different and the other entity has a collider component
+				if (thisEntity->name.compare(thatEntity->name) != 0 && thatEntity->HasComponent<ColliderComponent>()) 
 				{
-					//return the tag of colliding entity
-					return otherCollider->colliderTag;
+
+					//Get the other entities collider
+					ColliderComponent* thatCollider = thatEntity->GetComponent<ColliderComponent>();
+
+					//If there is a collision between the two colliders 
+					if (Collision::CheckRectangleCollision(thisCollider->collider, thatCollider->collider)) 
+					{
+
+						//If the collision is of player and enemy
+						if (thisCollider->colliderTag.compare("PLAYER") == 0 && thatCollider->colliderTag.compare("ENEMY") == 0) 
+						{
+							return PLAYER_ENEMY_COLLISION;
+						}
+
+						//If the collision is of player and projectile
+						if (thisCollider->colliderTag.compare("PLAYER") == 0 && thatCollider->colliderTag.compare("PROJECTILE") == 0) 
+						{
+							return PLAYER_PROJECTILE_COLLISION;
+						}
+
+						//If the collision is of enemy and friendly projectile
+						if (thisCollider->colliderTag.compare("ENEMY") == 0 && thatCollider->colliderTag.compare("FRIENDLY_PROJECTILE") == 0) 
+						{
+							return ENEMY_PROJECTILE_COLLISION;
+						}
+
+						//If the collision is of player and level goal
+						if (thisCollider->colliderTag.compare("PLAYER") == 0 && thatCollider->colliderTag.compare("LEVEL_COMPLETE") == 0) 
+						{
+							return PLAYER_LEVEL_COMPLETE_COLLISION;
+						}
+					}
 				}
 			}
 		}
 	}
-	return std::string();;
+	return NO_COLLISION;
 }
 
 //Displays all Entities and their info

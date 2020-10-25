@@ -29,6 +29,8 @@ public:
 	void LoadLevel(int LevelNumber);
 	void HandleCameraMovement();
 	void CheckCollisions();
+	void ProcessNextLevel(int levelNumber);
+	void ProcessGameOver();
 
 public:
 	int ticksLastFrame = 0;
