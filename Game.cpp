@@ -9,10 +9,11 @@
 #include "/GameEngine/libglm/lib/glm/glm.hpp"
 #include "Map.h"
 
-EntityManager manager;
-AssetManager* Game::assetManager = new AssetManager(&manager);
+EntityManager entityManager;
+AssetManager* Game::assetManager = new AssetManager(&entityManager);
 SDL_Renderer* Game::renderer;
 SDL_Event Game::event;
+bool Game::isDebug;
 SDL_Rect Game::camera = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
 Map* map;
 
@@ -32,7 +33,7 @@ bool Game::IsRunning() const { return this->isRunning; }
 
 
 //player entity - entity components added in LoadLevel 
-Entity& player(manager.AddEntity("chopper", PLAYER_LAYER));
+Entity& player(entityManager.AddEntity("chopper", PLAYER_LAYER));
 
 //Loads info from level
 void Game::LoadLevel(int LevelNumber)
@@ -43,6 +44,7 @@ void Game::LoadLevel(int LevelNumber)
 	assetManager->AddTexture("chopper-image", std::string("./assets/images/chopper-spritesheet.png").c_str());
 	assetManager->AddTexture("radar-image", std::string("./assets/images/radar.png").c_str());
 	assetManager->AddTexture("jungle-tiletexture", std::string("./assets/tilemaps/jungle.png").c_str());
+	assetManager->AddTexture("collision-image", std::string("./assets/images/collision-texture.png").c_str());
 
 	//Add tilemap
 	map = new Map("jungle-tiletexture", 2, 32);
@@ -53,16 +55,16 @@ void Game::LoadLevel(int LevelNumber)
 	player.AddComponent<TransformComponent>(240, 106, 0, 0, 32, 32, 1);
 	player.AddComponent<SpriteComponent>("chopper-image", 2, 90, true, false);
 	player.AddComponent<KeyboardControlComponent>("up", "right", "down", "left", "space");
-	player.AddComponent<ColliderComponent>("player", 240, 106, 32, 32);
+	player.AddComponent<ColliderComponent>("player", 240, 106, 32, 32, "collision-image");
 
 	//Add enemy and their components
-	Entity& tankEntity(manager.AddEntity("tank", ENEMY_LAYER));
+	Entity& tankEntity(entityManager.AddEntity("tank", ENEMY_LAYER));
 	tankEntity.AddComponent<TransformComponent>(150, 495, 5, 0, 32, 32, 1);
 	tankEntity.AddComponent<SpriteComponent>("tank-image");
-	tankEntity.AddComponent<ColliderComponent>("enemy", 150, 495, 32, 32);
+	tankEntity.AddComponent<ColliderComponent>("enemy", 150, 495, 32, 32, "collision-image");
 
 	//Add radar UI and their components
-	Entity& radarEntity(manager.AddEntity("Radar", UI_LAYER));
+	Entity& radarEntity(entityManager.AddEntity("Radar", UI_LAYER));
 	radarEntity.AddComponent<TransformComponent>(720, 15, 0, 0, 64, 64, 1);
 	radarEntity.AddComponent<SpriteComponent>("radar-image", 8, 150, false, true);
 
@@ -126,12 +128,18 @@ void Game::ProcessInput()
 			isRunning = false;
 			break;
 		}
-		//Closes the game when key ESC is pressed
+		//Closes the game when key ESC is pressed & sets debug mode on TAB key pressed
 		case SDL_KEYDOWN: 
 		{
+			//Close engine
 			if (event.key.keysym.sym == SDLK_ESCAPE)
 			{
 				isRunning = false;
+			}
+			//Sets debug mode
+			if (event.key.keysym.sym == SDLK_TAB) 
+			{
+				isDebug = !(isDebug);
 			}
 		}
 		default:
@@ -170,13 +178,14 @@ void Game::Update()
 	ticksLastFrame = SDL_GetTicks(); //Update the ticks to this time
 
 	//Updates all entities
-	manager.Update(DeltaTime);
+	entityManager.Update(DeltaTime);
 	
 	//Update the camera movement
 	HandleCameraMovement();
 	
 	//Check if there are any collisions with player in game
 	CheckCollisions();
+
 }
 
 //Render Window
@@ -191,13 +200,13 @@ void Game::Render()
 	SDL_RenderClear(renderer); 
 
 	//Dont render if there is nothing to render
-	if (manager.HasNoEntities())
+	if (entityManager.HasNoEntities())
 	{
 		return;
 	}
 
 	//Render all entities
-	manager.Render();
+	entityManager.Render();
 
 	//Swap front and back buffers
 	SDL_RenderPresent(renderer); //Swaps the rendered screen for visualization
@@ -222,13 +231,14 @@ void Game::HandleCameraMovement()
 //Checks entities, that have collider componenet, if they are colliding
 void Game::CheckCollisions()
 {
-	std::string collisionTagType = manager.CheckEntityCollisions(player);
+	std::string collisionTagType = entityManager.CheckEntityCollisions(player);
 	if (collisionTagType.compare("enemy") == 0)
 	{
 		//TODO: do something when collision is identified with an enemy
 		isRunning = false;
 	}
 }
+
 
 //Destroys window and renderer then quits
 void Game::Destroy()

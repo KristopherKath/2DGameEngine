@@ -4,6 +4,7 @@
 
 #include <SDL.h>
 #include "../Game.h"
+#include "../AssetManager.h"
 #include "../EntityManager.h"
 #include "TransformComponent.h"
 
@@ -15,9 +16,13 @@ public:
 	SDL_Rect sourceRectangle;
 	SDL_Rect destinationRectangle;
 	TransformComponent* transform;
+	SDL_Texture* colliderSprite;
 
-	ColliderComponent(std::string colliderTag, int x, int y, int width, int height)
+	//Constructor: Sets collider component based off of given colliderTag, position to be, 
+		//width and height, whether to render the collision box, and collision textureID
+	ColliderComponent(std::string colliderTag, int x, int y, int width, int height, std::string colliderTextureID)
 	{
+		colliderSprite = Game::assetManager->GetTexture(colliderTextureID);
 		this->colliderTag = colliderTag;
 		this->collider = { x, y, width, height };
 	}
@@ -42,6 +47,15 @@ public:
 		collider.h = transform->height * transform->scale;
 		destinationRectangle.x = collider.x - Game::camera.x;
 		destinationRectangle.y = collider.y - Game::camera.y;
+	}
+
+	//Render the collision box if render collider is true
+	void Render() override
+	{
+		if (Game::isDebug) 
+		{
+			TextureManager::Draw(colliderSprite, sourceRectangle, destinationRectangle, SDL_FLIP_NONE);
+		}
 	}
 };
 

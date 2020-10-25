@@ -4,7 +4,7 @@
 #include "Components\TileComponent.h"
 #include <fstream>
 
-extern EntityManager manager;
+extern EntityManager entityManager;
 
 //Constructor given tilemap textureID, scale to display it as, and tile size
 Map::Map(std::string textureID, int scale, int tileSize) : textureID(textureID), scale(scale), tileSize(tileSize) {}
@@ -39,6 +39,6 @@ void Map::LoadMap(std::string filePath, int mapSizeX, int mapSizeY)
 //Adds the given texture to tile map
 void Map::AddTile(int sourceRectX, int sourceRectY, int x, int y)
 {
-	Entity& newTile(manager.AddEntity("Tile", TILEMAP_LAYER));
+	Entity& newTile(entityManager.AddEntity("Tile", TILEMAP_LAYER));
 	newTile.AddComponent<TileComponent>(sourceRectX, sourceRectY, x, y, tileSize, scale, textureID);
 }

@@ -101,7 +101,7 @@ public:
 		sourceRectangle.h = transform->height;
 	}
 
-	//Update the sprite component
+	//Update the sprite component position and if animated
 	void Update(float DeltaTime) override
 	{
 		//animate the texture
