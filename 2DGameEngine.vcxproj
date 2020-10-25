@@ -150,6 +150,7 @@
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityManager.cpp" />
+    <ClCompile Include="FontManager.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Map.h" />
     <ClCompile Include="Source.cpp" />
@@ -164,11 +165,13 @@
     <ClInclude Include="Components\ColliderComponent.h" />
     <ClInclude Include="Components\KeyboardControlComponent.h" />
     <ClInclude Include="Components\SpriteComponent.h" />
+    <ClInclude Include="Components\TextLabelComponent.h" />
     <ClInclude Include="Components\TileComponent.h" />
     <ClInclude Include="Components\TransformComponent.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="FontManager.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="TextureManager.h" />
   </ItemGroup>

@@ -2,12 +2,14 @@
 #include "Constants.h"
 #include "Game.h"
 #include "AssetManager.h"
+#include "Map.h"
 #include "Components/TransformComponent.h"
 #include "Components/SpriteComponent.h"
 #include "Components/ColliderComponent.h"
 #include "Components/KeyboardControlComponent.h"
+#include "Components/TextLabelComponent.h"
 #include "/GameEngine/libglm/lib/glm/glm.hpp"
-#include "Map.h"
+
 
 EntityManager entityManager;
 AssetManager* Game::assetManager = new AssetManager(&entityManager);
@@ -46,6 +48,7 @@ void Game::LoadLevel(int LevelNumber)
 	assetManager->AddTexture("jungle-tiletexture", std::string("./assets/tilemaps/jungle.png").c_str());
 	assetManager->AddTexture("collision-image", std::string("./assets/images/collision-texture.png").c_str());
 	assetManager->AddTexture("heliport-image", std::string("./assets/images/heliport.png").c_str());
+	assetManager->AddFont("charriot-font", std::string("./assets/fonts/charriot.ttf").c_str(), 14);
 
 	//Add tilemap
 	map = new Map("jungle-tiletexture", 2, 32);
@@ -75,17 +78,25 @@ void Game::LoadLevel(int LevelNumber)
 	radarEntity.AddComponent<TransformComponent>(720, 15, 0, 0, 64, 64, 1);
 	radarEntity.AddComponent<SpriteComponent>("radar-image", 8, 150, false, true);
 
+
+	Entity& labelLevelName(entityManager.AddEntity("LabelLevelName", UI_LAYER));
+	labelLevelName.AddComponent<TextLabelComponent>(10, 10, "First Level...", "charriot-font", WHITE_COLOR);
 }
 
 //Initializes SDL window and renderer 
 //Sets game as running if no errors
 void Game::Initialize(int width, int height)
 {
-	//Checks if SLD works
+	//Checks if SLD initializes
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
 	{
-		std::cerr << "Error initializing SDL." << std::endl;
+		std::cerr << "Error initializing SDL" << std::endl;
 		return;
+	}
+	//Checls if TTF initializes
+	if (TTF_Init() != 0)
+	{
+		std::cerr << "Error initializing ADL TTF" << std::endl;
 	}
 
 	//Create the window
