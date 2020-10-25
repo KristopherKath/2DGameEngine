@@ -25,6 +25,19 @@ void EntityManager::Update(float DeltaTime)
 	{
 		Entity->Update(DeltaTime);
 	}
+	DestroyInactiveEntities(); //remove inactive entities
+}
+
+//Destroys inactive entities
+void EntityManager::DestroyInactiveEntities()
+{
+	for (int i = 0; i < entities.size(); i++)
+	{
+		if (!entities[i]->IsActive())
+		{
+			entities.erase(entities.begin() + i);
+		}
+	}
 }
 
 //Renders each entity in Entity Manager in order of layer numbers defined in Constants.h

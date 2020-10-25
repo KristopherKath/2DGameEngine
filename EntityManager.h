@@ -16,6 +16,7 @@ public:
 	void ClearData();
 	void Update(float DeltaTime);
 	void Render();
+	void DestroyInactiveEntities();
 	void ListAllEntities() const;
 	bool HasNoEntities() const;
 	Entity& AddEntity(std::string entityName, LayerType layer);

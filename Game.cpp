@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "AssetManager.h"
 #include "Map.h"
+#include "Components/ProjectileEmitterComponent.h"
 #include "Components/TransformComponent.h"
 #include "Components/SpriteComponent.h"
 #include "Components/ColliderComponent.h"
@@ -48,6 +49,7 @@ void Game::LoadLevel(int LevelNumber)
 	assetManager->AddTexture("jungle-tiletexture", std::string("./assets/tilemaps/jungle.png").c_str());
 	assetManager->AddTexture("collision-image", std::string("./assets/images/collision-texture.png").c_str());
 	assetManager->AddTexture("heliport-image", std::string("./assets/images/heliport.png").c_str());
+	assetManager->AddTexture("projectile-image", std::string("./assets/images/bullet-enemy.png").c_str());
 	assetManager->AddFont("charriot-font", std::string("./assets/fonts/charriot.ttf").c_str(), 14);
 
 	//Add tilemap
@@ -67,6 +69,13 @@ void Game::LoadLevel(int LevelNumber)
 	tankEntity.AddComponent<SpriteComponent>("tank-image");
 	tankEntity.AddComponent<ColliderComponent>("ENEMY", 150, 495, 32, 32, "collision-image");
 
+	//Creates a projectile and their components
+	Entity& projectile(entityManager.AddEntity("projectile", PROJECTILE_LAYER));
+	projectile.AddComponent<TransformComponent>(150+16, 495+16, 0, 0, 4, 4, 1);
+	projectile.AddComponent<SpriteComponent>("projectile-image");
+	projectile.AddComponent<ColliderComponent>("PROJECTILE", 150+16, 495+16, 4, 4, "collision-image");
+	projectile.AddComponent<ProjectileEmitterComponent>(100, 270, 200, true);
+
 	//Add level goal and their components
 	Entity& heliport(entityManager.AddEntity("Heliport", OBSTACLE_LAYER));
 	heliport.AddComponent<TransformComponent>(470, 420, 0, 0, 32, 32, 1);
@@ -78,7 +87,7 @@ void Game::LoadLevel(int LevelNumber)
 	radarEntity.AddComponent<TransformComponent>(720, 15, 0, 0, 64, 64, 1);
 	radarEntity.AddComponent<SpriteComponent>("radar-image", 8, 150, false, true);
 
-
+	//Creates a UI Text display
 	Entity& labelLevelName(entityManager.AddEntity("LabelLevelName", UI_LAYER));
 	labelLevelName.AddComponent<TextLabelComponent>(10, 10, "First Level...", "charriot-font", WHITE_COLOR);
 }
@@ -255,10 +264,15 @@ void Game::CheckCollisions()
 	{
 		ProcessGameOver();
 	}
+	if (collisionType == PLAYER_PROJECTILE_COLLISION)
+	{
+		ProcessGameOver();
+	}
 	if (collisionType == PLAYER_LEVEL_COMPLETE_COLLISION)
 	{
 		ProcessNextLevel(1);
 	}
+
 }
 
 //Next level - Quits program as of now
