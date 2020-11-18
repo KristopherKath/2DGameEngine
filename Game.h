@@ -5,9 +5,11 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include "Lua535/include/sol.hpp"
 #include "Entity.h"
 #include "Component.h"
 #include "EntityManager.h"
+#include "Map.h"
 
 class AssetManager;
 
