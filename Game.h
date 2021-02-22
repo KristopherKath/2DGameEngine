@@ -33,6 +33,7 @@ public:
 	void CheckCollisions();
 	void ProcessNextLevel(int levelNumber);
 	void ProcessGameOver();
+	void LoadSystems();
 
 public:
 	int ticksLastFrame = 0;

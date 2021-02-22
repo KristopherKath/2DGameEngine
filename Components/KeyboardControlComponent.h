@@ -52,6 +52,7 @@ public:
 	//Updates based on keyboard input
 	void Update(float deltaTime) override
 	{
+		/*		THIS WAS MOVED INTO KEYBOARD CONTROL SYSTEM
 		//When key pressed update the speed/direction of entity and animation
 		if (Game::event.type == SDL_KEYDOWN)
 		{
@@ -107,6 +108,7 @@ public:
 				// TODO
 			}
 		}
+		*/
 	}
 };
 

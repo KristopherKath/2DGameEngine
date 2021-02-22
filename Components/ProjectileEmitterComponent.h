@@ -18,6 +18,11 @@ private:
 
 public:
 
+	bool GetShouldLoop() { return shouldLoop; }
+	TransformComponent* GetTransformComp() { return transform; }
+	glm::vec2 GetOrigin() { return origin; }
+	int GetRange() { return range; }
+
 	//Constructor: Needs a speed, angle in degrees, range till death, and bool for looping projectile
 	ProjectileEmitterComponent(int speed, int angleDeg, int range, bool shouldLoop)
 	{
@@ -37,6 +42,7 @@ public:
 
 	void Update(float deltaTime) override
 	{
+		/*  THIS HAS BEEN MOVED INTO PROJECTILE EMITTER SYSTEM
 		if (glm::distance(transform->position, origin) > range)
 		{
 			//If the projectile should loop then loop it, else destroy it
@@ -50,6 +56,7 @@ public:
 				owner->Destroy();
 			}
 		}
+		*/
 	}
 };
 

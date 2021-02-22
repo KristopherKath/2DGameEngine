@@ -33,20 +33,10 @@ public:
 	//Updates the transform position
 	void Update(float DeltaTime) override
 	{
+		/*	MOVED INTO TRANSFORM SYSTEM
 		//Change the objects position based on velocity
 		position.x += velocity.x * DeltaTime;
 		position.y += velocity.y * DeltaTime;
-
-		/*
-		//Clamp the values if they are out of bounds of screen
-		if (!InBoundaryCheckX(position.x))
-		{
-			position.x = Clamp(position.x, 0, (int)WINDOW_WIDTH - 32);
-		}
-		if (!InBoundaryCheckY(position.y))
-		{
-			position.y = Clamp(position.y, 0, (int)WINDOW_HEIGHT - 32);
-		}
 		*/
 	}
 

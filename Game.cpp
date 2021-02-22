@@ -8,6 +8,13 @@
 #include "Components/ColliderComponent.h"
 #include "Components/KeyboardControlComponent.h"
 #include "Components/TextLabelComponent.h"
+#include "Systems/System.h"
+#include "Systems/ColliderSystem.h"
+#include "Systems/TransformSystem.h"
+#include "Systems/KeyboardControlSystem.h"
+#include "Systems/ProjectileEmitterSystem.h"
+#include "Systems/SpriteSystem.h"
+#include "Systems/TileSystem.h"
 #include "../../libglm/lib/glm/glm.hpp"
 
 
@@ -20,6 +27,8 @@ SDL_Rect Game::camera = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
 Map* map;
 //player entity - entity components added in LoadLevel 
 Entity* mainPlayer = NULL;
+
+std::vector<System*> systems; //Contains a list of systems for updating components
 
 //Constructor
 Game::Game()
@@ -308,9 +317,28 @@ void Game::Initialize(int width, int height)
 	//Load the level to run
 	LoadLevel(1);
 
+	//Load Systems
+	LoadSystems();
+
 	//Game is now running
 	isRunning = true;
 	return;
+}
+
+//Loads the systems with each of the components to edit
+void Game::LoadSystems()
+{
+	systems.push_back(new ColliderSystem());
+	systems.push_back(new KeyboardControlSystem());
+	systems.push_back(new ProjectileEmitterSystem());
+	systems.push_back(new SpriteSystem());
+	systems.push_back(new TileSystem());
+	systems.push_back(new TransformSystem());
+
+	for (auto& sys : systems)
+	{
+		sys->AddComponents(&entityManager);
+	}
 }
 
 //Processes User Input
@@ -376,6 +404,10 @@ void Game::Update()
 
 	//Updates all entities
 	entityManager.Update(DeltaTime);
+	for (auto& sys : systems)
+	{
+		sys->Update(DeltaTime);
+	}
 	
 	//Update the camera movement
 	HandleCameraMovement();

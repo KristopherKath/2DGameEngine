@@ -6,6 +6,7 @@
 #include "Constants.h"
 #include "Entity.h"
 #include <vector>
+#include <iostream>
 
 class EntityManager
 {
@@ -25,7 +26,6 @@ public:
 	Entity* GetEntityByName(std::string name) const;
 	unsigned int GetEntityCount() const;
 	CollisionType CheckCollisions() const;
-
 };
 
 #endif

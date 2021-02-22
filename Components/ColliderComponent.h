@@ -41,12 +41,14 @@ public:
 	//Update collider along with the transfrom of the entity
 	void Update(float deltaTime) override
 	{
+		/*	MOVED INTO COLLIDER SYSTEM
 		collider.x = static_cast<int>(transform->position.x);
 		collider.y = static_cast<int>(transform->position.y);
 		collider.w = transform->width * transform->scale;
 		collider.h = transform->height * transform->scale;
 		destinationRectangle.x = collider.x - Game::camera.x;
 		destinationRectangle.y = collider.y - Game::camera.y;
+		*/
 	}
 
 	//Render the collision box if render collider is true

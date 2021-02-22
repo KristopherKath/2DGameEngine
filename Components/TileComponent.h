@@ -43,8 +43,10 @@ public:
 	//Update the tile based on the position if camera component
 	void Update(float deltaTime) override
 	{
+		/*   THIS HAS BEEN MOVED INTO TILE SYSTEM
 		destinationRectangle.x = position.x - Game::camera.x;
 		destinationRectangle.y = position.y - Game::camera.y;
+		*/
 	}
 
 	//render the tile

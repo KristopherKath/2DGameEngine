@@ -13,8 +13,6 @@ class SpriteComponent : public Component
 private:
 	TransformComponent* transform;
 	SDL_Texture* texture;
-	SDL_Rect sourceRectangle;
-	SDL_Rect destinationRectangle;
 	bool isAnimated;
 	int numFrames;
 	int animationSpeed;
@@ -24,7 +22,20 @@ private:
 	unsigned int animationIndex = 0;
 
 public:
+
 	SDL_RendererFlip spriteFlip = SDL_FLIP_NONE;
+	SDL_Rect sourceRectangle;
+	SDL_Rect destinationRectangle;
+
+	bool GetIsAnimated() { return isAnimated; }
+	bool GetIsFixed() { return isFixed; }
+	unsigned int GetAnimationIndex() { return animationIndex; }
+	int GetNumFrames() { return numFrames; }
+	int GetAnimationSpeed() { return animationSpeed; }
+	SDL_Rect GetSourceRect() { return sourceRectangle; }
+	SDL_Rect GetDestinationRect() { return destinationRectangle; }
+	TransformComponent* GetTransformComp() { return transform; }
+
 
 	//Constructor for single image
 	SpriteComponent(std::string AssetTextureID)
@@ -104,6 +115,9 @@ public:
 	//Update the sprite component position and if animated
 	void Update(float DeltaTime) override
 	{
+		
+		/* ****   THIS HAS BEEN MOVED INTO SPRITESYSTEM   ***
+		* 
 		//animate the texture
 		if (isAnimated)
 		{
@@ -117,6 +131,7 @@ public:
 		destinationRectangle.y = static_cast<int>(transform->position.y) - (isFixed ? 0 : Game::camera.y);
 		destinationRectangle.w = transform->width * transform->scale;
 		destinationRectangle.h = transform->height * transform->scale;
+		*/
 	}
 
 	//Renders the texture
