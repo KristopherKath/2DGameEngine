@@ -1,6 +1,6 @@
 #include "EntityManager.h"
 #include <iostream>
-#include "Collision.h"
+//#include "Collision.h"
 #include "Components\ColliderComponent.h"
 
 //Deletes all entities in the Entity Manager
@@ -102,9 +102,13 @@ unsigned int EntityManager::GetEntityCount() const
 	return entities.size();
 }
 
+
 //Returns the type of collision of two colliding entities
+
+/*MOVED INTO COLLIDER SYSTEM
 CollisionType EntityManager::CheckCollisions() const
 {
+			
 	//Check each entity
 	for (int i = 0; i < entities.size() - 1; i++) 
 	{
@@ -162,7 +166,10 @@ CollisionType EntityManager::CheckCollisions() const
 		}
 	}
 	return NO_COLLISION;
+
+
 }
+	*/
 
 //Displays all Entities and their info
 void EntityManager::ListAllEntities() const

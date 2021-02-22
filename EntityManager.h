@@ -25,7 +25,8 @@ public:
 	std::vector<Entity*> GetEntities() const;
 	Entity* GetEntityByName(std::string name) const;
 	unsigned int GetEntityCount() const;
-	CollisionType CheckCollisions() const;
+
+	//CollisionType CheckCollisions() const;
 };
 
 #endif

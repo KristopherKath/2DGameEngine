@@ -27,7 +27,7 @@ SDL_Rect Game::camera = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
 Map* map;
 //player entity - entity components added in LoadLevel 
 Entity* mainPlayer = NULL;
-
+ColliderSystem* colliderSystem; //Collider system pointer for checking collisions
 std::vector<System*> systems; //Contains a list of systems for updating components
 
 //Constructor
@@ -329,6 +329,7 @@ void Game::Initialize(int width, int height)
 void Game::LoadSystems()
 {
 	systems.push_back(new ColliderSystem());
+	colliderSystem = static_cast<ColliderSystem*>(systems[0]); //stores pointer to collider system
 	systems.push_back(new KeyboardControlSystem());
 	systems.push_back(new ProjectileEmitterSystem());
 	systems.push_back(new SpriteSystem());
@@ -466,7 +467,7 @@ void Game::HandleCameraMovement()
 	//Changes based on type of collision
 void Game::CheckCollisions()
 {
-	CollisionType collisionType = entityManager.CheckCollisions();
+	CollisionType collisionType = colliderSystem->CheckCollisions();
 	if (collisionType == PLAYER_ENEMY_COLLISION)
 	{
 		ProcessGameOver();

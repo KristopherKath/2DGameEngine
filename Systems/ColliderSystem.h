@@ -3,6 +3,7 @@
 #include <iostream>
 #include "../Entity.h"
 #include "../Components/ColliderComponent.h"
+#include "Collision.h"
 
 class ColliderSystem : public System
 {
@@ -54,4 +55,57 @@ public:
 			}
 		}
 	};
+
+
+
+	//Returns the type of collision of two colliding colliders
+	CollisionType CheckCollisions() const
+	{
+		//Check each collider
+		for (int i = 0; i < colliders.size() - 1; i++)
+		{
+			//Get the this entities collider component
+			ColliderComponent* thisCollider = colliders[i];
+
+			//Check each collider after the selected collider
+			for (int j = i + 1; j < colliders.size(); j++)
+			{
+				ColliderComponent* thatCollider = colliders[j];
+
+				//If their entity names are different
+				if (thisCollider->owner->name.compare(thatCollider->owner->name) != 0)
+				{
+					//If there is a collision between the two colliders 
+					if (Collision::CheckRectangleCollision(thisCollider->collider, thatCollider->collider))
+					{
+
+						//If the collision is of player and enemy
+						if (thisCollider->colliderTag.compare("PLAYER") == 0 && thatCollider->colliderTag.compare("ENEMY") == 0)
+						{
+							return PLAYER_ENEMY_COLLISION;
+						}
+
+						//If the collision is of player and projectile
+						if (thisCollider->colliderTag.compare("PLAYER") == 0 && thatCollider->colliderTag.compare("PROJECTILE") == 0)
+						{
+							return PLAYER_PROJECTILE_COLLISION;
+						}
+
+						//If the collision is of enemy and friendly projectile
+						if (thisCollider->colliderTag.compare("ENEMY") == 0 && thatCollider->colliderTag.compare("FRIENDLY_PROJECTILE") == 0)
+						{
+							return ENEMY_PROJECTILE_COLLISION;
+						}
+
+						//If the collision is of player and level goal
+						if (thisCollider->colliderTag.compare("PLAYER") == 0 && thatCollider->colliderTag.compare("LEVEL_COMPLETE") == 0)
+						{
+							return PLAYER_LEVEL_COMPLETE_COLLISION;
+						}
+					}
+				}
+			}
+		}
+		return NO_COLLISION;
+	}
 };
