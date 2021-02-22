@@ -403,7 +403,9 @@ void Game::Update()
 	ticksLastFrame = SDL_GetTicks(); //Update the ticks to this time
 
 	//Updates all entities
-	entityManager.Update(DeltaTime);
+	entityManager.Update(DeltaTime); //handles deleting entities
+
+	//Systems update all relavent components
 	for (auto& sys : systems)
 	{
 		sys->Update(DeltaTime);

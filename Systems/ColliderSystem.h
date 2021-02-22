@@ -8,10 +8,12 @@ class ColliderSystem : public System
 {
 public:
 	std::vector<ColliderComponent*> colliders;
+	std::vector<int> positionsToRemove;
 
 	//Override update in parent to handle transform components
 	void Update(float deltaTime) override
 	{
+		int i = 0;
 		for (ColliderComponent* c : colliders)
 		{
 			if (c == nullptr) { continue; }
@@ -22,13 +24,25 @@ public:
 			c->collider.h = c->transform->height * c->transform->scale;
 			c->destinationRectangle.x = c->collider.x - Game::camera.x;
 			c->destinationRectangle.y = c->collider.y - Game::camera.y;
+
+			++i;
+		}
+		RemoveNullComponents();
+	}
+
+	//Removes null pointers from list
+	void RemoveNullComponents()
+	{
+		for (int i : positionsToRemove)
+		{
+			std::cout << "REMOVING NULL PTR" << std::endl;
+			colliders.erase(colliders.begin() + i);
 		}
 	}
 
 	//Will add each of the desired components into the system
 	void AddComponents(EntityManager* entityManager) override
 	{
-		std::cout << "Adding all collider components" << std::endl;
 		std::vector<Entity*> entities = entityManager->GetEntities();
 
 		for (Entity* e : entities)

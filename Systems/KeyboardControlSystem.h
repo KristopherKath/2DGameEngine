@@ -8,13 +8,19 @@ class KeyboardControlSystem : public System
 {
 public:
 	std::vector<KeyboardControlComponent*> keyboards;
+	std::vector<int> positionsToRemove;
 
 	//Override update in parent to handle transform components
 	void Update(float deltaTime) override
 	{
+		int i = 0;
 		for (KeyboardControlComponent* kb : keyboards)
 		{
-			if (kb == nullptr) { continue; }
+			if (kb == nullptr) 
+			{ 
+				positionsToRemove.push_back(i);
+				continue; 
+			}
 
 			//When key pressed update the speed/direction of entity and animation
 			if (Game::event.type == SDL_KEYDOWN)
@@ -71,13 +77,24 @@ public:
 					// TODO
 				}
 			}
+			++i;
+		}
+		RemoveNullComponents();
+	}
+
+	//Removes null pointers from list
+	void RemoveNullComponents()
+	{
+		for (int i : positionsToRemove)
+		{
+			std::cout << "REMOVING NULL PTR" << std::endl;
+			keyboards.erase(keyboards.begin() + i);
 		}
 	}
 
 	//Will add each of the desired components into the system
 	void AddComponents(EntityManager* entityManager) override
 	{
-		std::cout << "Adding all KeyboardControl components" << std::endl;
 		std::vector<Entity*> entities = entityManager->GetEntities();
 
 		for (Entity* e : entities)

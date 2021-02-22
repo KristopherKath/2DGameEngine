@@ -9,13 +9,19 @@ class SpriteSystem : public System
 {
 public:
 	std::vector<SpriteComponent*> sprites;
+	std::vector<int> positionsToRemove;
 
 	//Override update in parent to handle transform components
 	void Update(float deltaTime) override
 	{
+		int i = 0;
 		for (SpriteComponent* sc : sprites)
 		{
-			if (sc == nullptr) { continue; }
+			if (sc == nullptr) 
+			{
+				positionsToRemove.push_back(i);
+				continue;
+			}
 
 			//animate the texture
 			if (sc->GetIsAnimated())
@@ -30,13 +36,25 @@ public:
 			sc->destinationRectangle.y = static_cast<int>(sc->GetTransformComp()->position.y) - (sc->GetIsFixed() ? 0 : Game::camera.y);
 			sc->destinationRectangle.w = sc->GetTransformComp()->width * sc->GetTransformComp()->scale;
 			sc->destinationRectangle.h = sc->GetTransformComp()->height * sc->GetTransformComp()->scale;
+
+			++i;
+		}
+		RemoveNullComponents();
+	}
+
+	//Removes null pointers from list
+	void RemoveNullComponents()
+	{
+		for (int i : positionsToRemove)
+		{
+			std::cout << "REMOVING NULL PTR" << std::endl;
+			sprites.erase(sprites.begin() + i);
 		}
 	}
 
 	//Will add each of the desired components into the system
 	void AddComponents(EntityManager* entityManager) override
 	{
-		std::cout << "Adding all Sprite components" << std::endl;
 		std::vector<Entity*> entities = entityManager->GetEntities();
 
 		for (Entity* e : entities)

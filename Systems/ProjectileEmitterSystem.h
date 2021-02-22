@@ -9,13 +9,19 @@ class ProjectileEmitterSystem : public System
 {
 public:
 	std::vector<ProjectileEmitterComponent*> projectiles;
+	std::vector<int> positionsToRemove;
 
 	//Override update in parent to handle transform components
 	void Update(float deltaTime) override
 	{
+		int i = 0;
 		for (ProjectileEmitterComponent* projectile : projectiles)
 		{
-			if (projectile == nullptr) { continue; }
+			if (projectile == nullptr) 
+			{
+				positionsToRemove.push_back(i);
+				continue;
+			}
 
 			if (glm::distance(projectile->GetTransformComp()->position, projectile->GetOrigin()) > projectile->GetRange())
 			{
@@ -30,13 +36,24 @@ public:
 					projectile->owner->Destroy();
 				}
 			}
+			++i;
+		}
+		RemoveNullComponents();
+	}
+
+	//Removes null pointers from list
+	void RemoveNullComponents()
+	{
+		for (int i : positionsToRemove)
+		{
+			std::cout << "REMOVING NULL PTR" << std::endl;
+			projectiles.erase(projectiles.begin() + i);
 		}
 	}
 
 	//Will add each of the desired components into the system
 	void AddComponents(EntityManager* entityManager) override
 	{
-		std::cout << "Adding all ProjectileEmitter components" << std::endl;
 		std::vector<Entity*> entities = entityManager->GetEntities();
 
 		for (Entity* e : entities)

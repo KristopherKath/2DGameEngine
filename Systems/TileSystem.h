@@ -9,22 +9,40 @@ class TileSystem : public System
 {
 public:
 	std::vector<TileComponent*> tiles;
+	std::vector<int> positionsToRemove;
 
 	//Override update in parent to handle transform components
 	void Update(float deltaTime) override
 	{
+		int i = 0;
 		for (TileComponent* tile : tiles)
 		{
-			if (tile == nullptr) { continue; }
+			if (tile == nullptr) 
+			{
+				positionsToRemove.push_back(i);
+				continue;
+			}
+
 			tile->destinationRectangle.x = tile->position.x - Game::camera.x;
 			tile->destinationRectangle.y = tile->position.y - Game::camera.y;
+			++i;
+		}
+		RemoveNullComponents();
+	}
+
+	//Removes null pointers from list
+	void RemoveNullComponents()
+	{
+		for (int i : positionsToRemove)
+		{
+			std::cout << "REMOVING NULL PTR" << std::endl;
+			tiles.erase(tiles.begin() + i);
 		}
 	}
 
 	//Will add each of the desired components into the system
 	void AddComponents(EntityManager* entityManager) override
 	{
-		std::cout << "Adding all Tile components" << std::endl;
 		std::vector<Entity*> entities = entityManager->GetEntities();
 
 		for (Entity* e : entities)
